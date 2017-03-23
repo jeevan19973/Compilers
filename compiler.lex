@@ -1,5 +1,5 @@
 %{
-
+	#include "y.tab.h"
 %}
 %%
 [ \n]   { yylineno = yylineno + 1;}
@@ -12,7 +12,7 @@
 
 "struct"|"union" return STRUCT_OR_UNION;
 
-"enum" return ENUM_SPECIFIER;
+"enum" return ENUM;
 
 "case" return CASE;
 "default" return DEFAULT;
@@ -46,8 +46,13 @@
 "ifndef" return IFNDEF;
 "elif" return ELIF; 
 
+"[_a-zA-Z][_a-zA-Z0-9]+" return IDENTIFIER;
+"[+-]?[0-9]+" return INTEGER_CONSTANT;
+"[+-]?([0-9]*[.])?[0-9]+" return FLOATING_CONSTANT;
 \"(\\.|[^\\"])*\" return STRING;
 \'(\\.|[^\\"])\' return CHARACTER_CONSTANT;
+
+[^\n \t]+ return TOKEN_SEQUENCE;
 
 ^([^ ]+)|([^/ ]+)$ return FILENAME;
 
