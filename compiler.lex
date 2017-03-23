@@ -2,6 +2,8 @@
 
 %}
 %%
+[ \n]   { yylineno = yylineno + 1;}
+
 "auto"|"register"|"static"|"extern"|"typedef" return STORAGE_CLASS_SPECIFIER;
 
 "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned" return TYPE_SPECIFIER;
@@ -43,5 +45,10 @@
 "ifdef" return IFDEF;
 "ifndef" return IFNDEF;
 "elif" return ELIF; 
+
+\"(\\.|[^\\"])*\" return STRING;
+\'(\\.|[^\\"])\' return CHARACTER_CONSTANT;
+
+^([^ ]+)|([^/ ]+)$ return FILENAME;
 
 %%
