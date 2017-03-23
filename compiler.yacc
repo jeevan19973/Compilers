@@ -25,15 +25,18 @@ EXTERNAL__DECLARATION: FUNCTION__DEFINITION
                       DECLARATION
                       ;
 
-FUNCTION__DEFINITION:  DECLARATION__SPECIFIERS 
-                      |
-                      DECLARATOR DECLARATION__LIST
-                      |
-                      COMPOUND__STATEMENT
+FUNCTION__DEFINITION:  DECLARATION__SPECIFIERS DECLARATOR DECLARATION__LIST COMPOUND__STATEMENT
+                       |
+                       DECLARATOR DECLARATION__LIST COMPOUND__STATEMENT
+                       |
+                       DECLARATION__SPECIFIERS DECLARATOR COMPOUND__STATEMENT
+                       |
+                      DECLARATOR COMPOUND__STATEMENT
                       ;
 
 DECLARATION:  DECLARATION__SPECIFIERS INIT__DECLARATOR__LIST
               |
+              DECLARATION__SPECIFIERS 
               ;
 
 DECLARATION__LIST: DECLARATION
@@ -43,9 +46,15 @@ DECLARATION__LIST: DECLARATION
 
 DECLARATION__SPECIFIERS: STORAGE__CLASS__SPECIFIER DECLARATION__SPECIFIERS 
                         |
+                        STORAGE__CLASS__SPECIFIER
+                        |
                         TYPE__SPECIFIER DECLARATION__SPECIFIERS
+                        |
+                        TYPE__SPECIFIER
                         |                          
                         TYPE__QUALIFIER DECLARATION__SPECIFIERS
+                        |
+                        TYPE__QUALIFIER
                         ;
 
 STORAGE__CLASS__SPECIFIER: STORAGE_CLASS_SPECIFIER 
@@ -64,6 +73,8 @@ TYPE__QUALIFIER: TYPE_QUALIFIER
                 ;
 
 STRUCT__OR__UNION__SPECIFIER: STRUCT__OR__UNION IDENTIFIER '{' STRUCT__DECLARATION__LIST '}'
+                           |
+                           STRUCT__OR__UNION '{' STRUCT__DECLARATION__LIST '}'
                            |
                            STRUCT__OR__UNION IDENTIFIER
                            ;
@@ -91,8 +102,11 @@ STRUCT__DECLARATION: SPECIFIER__QUALIFIER__LIST STRUCT__DECLARATOR__LIST
 
 SPECIFIER__QUALIFIER__LIST: TYPE__SPECIFIER SPECIFIER__QUALIFIER__LIST
                           |
+                          TYPE__SPECIFIER
+                          |
                           TYPE__QUALIFIER SPECIFIER__QUALIFIER__LIST
                           |
+                          TYPE__QUALIFIER
                           ;
 
 STRUCT__DECLARATOR__LIST: STRUCT__DECLARATOR
@@ -103,9 +117,13 @@ STRUCT__DECLARATOR__LIST: STRUCT__DECLARATOR
 STRUCT__DECLARATOR:  DECLARATOR
                     |
                     DECLARATOR ':' CONSTANT__EXPRESSION
+                    |
+                    ':' CONSTANT__EXPRESSION
                     ;
 
 ENUM__SPECIFIER: ENUM IDENTIFIER '{' ENUMERATOR__LIST '}' 
+                |
+                ENUM '{' ENUMERATOR__LIST '}'
                 |
                 ENUM IDENTIFIER
                 ;
@@ -120,7 +138,7 @@ ENUMERATOR: IDENTIFIER
             IDENTIFIER '=' CONSTANT__EXPRESSION
             ;
 
-DECLARATOR: POINTER
+DECLARATOR: POINTER DIRECT__DECLARATOR
             |
             DIRECT__DECLARATOR
             ;
@@ -131,9 +149,13 @@ DIRECT__DECLARATOR: IDENTIFIER
                    |
                    DIRECT__DECLARATOR '[' CONSTANT__EXPRESSION ']'
                    |
+                   DIRECT__DECLARATOR '[' ']'
+                   |
                    DIRECT__DECLARATOR '(' PARAMETER__TYPE__LIST ')'
                    |
                    DIRECT__DECLARATOR '(' IDENTIFIER__LIST ')'
+                   |
+                   DIRECT__DECLARATOR '(' ')'
                    |
                    DIRECT__DECLARATOR '(' ')'
                    ;
