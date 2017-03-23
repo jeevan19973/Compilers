@@ -2,7 +2,7 @@
 
 %}
 %%
-"auto"|"register"|"static"|"extern"|"typedef"|"return" return STORAGE_CLASS_SPECIFIER;
+"auto"|"register"|"static"|"extern"|"typedef" return STORAGE_CLASS_SPECIFIER;
 
 "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned" return TYPE_SPECIFIER;
 
