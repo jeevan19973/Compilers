@@ -1,7 +1,20 @@
 %{
-#include<stdio.h>
-#include<math.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+// #define YYPRINT(file, type, value)   yyprint (file, type, value)
+// static void
+// yyprint (file, type, value)
+//      FILE *file;
+//      int type;
+//      YYSTYPE value;
+// {
+//   if (type == VAR)
+//     fprintf (file, " %s", value.tptr->name);
+//   else if (type == NUM)
+//     fprintf (file, " %d", value.val);
+// }
+#define YYDEBUG 1
 %}
 
 %start PROGRAM
@@ -65,9 +78,9 @@ TYPE__SPECIFIER: TYPE_SPECIFIER
                 STRUCT__OR__UNION__SPECIFIER
                 |
                 ENUM__SPECIFIER
-                |
-                TYPEDEF__NAME
                 ;
+/*                |
+                TYPEDEF__NAME*/
 
 TYPE__QUALIFIER: TYPE_QUALIFIER
                 ;
@@ -156,8 +169,6 @@ DIRECT__DECLARATOR: IDENTIFIER
                    DIRECT__DECLARATOR '(' IDENTIFIER__LIST ')'
                    |
                    DIRECT__DECLARATOR '(' ')'
-                   |
-                   DIRECT__DECLARATOR '(' ')'
                    ;
 
 POINTER: '*' TYPE__QUALIFIER__LIST
@@ -180,8 +191,6 @@ PARAMETER__TYPE__LIST:  PARAMETER__LIST
                       ;
 
 PARAMETER__LIST: PARAMETER__DECLARATION
-                |
-                PARAMETER__LIST ',' PARAMETER__DECLARATION
                 ;
 
 PARAMETER__DECLARATION: DECLARATION__SPECIFIERS DECLARATOR
@@ -238,8 +247,8 @@ DIRECT__ABSTRACT__DECLARATOR: '(' ABSTRACT__DECLARATOR ')'
                             '(' ')'
                             ;
 
-TYPEDEF__NAME: IDENTIFIER
-              ;
+/*TYPEDEF__NAME: IDENTIFIER
+              ;*/
 
 STATEMENT:  LABELED__STATEMENT
             |
@@ -403,7 +412,9 @@ ADDITIVE__EXPRESSION: MULTIPLICATIVE__EXPRESSION
 					ADDITIVE__EXPRESSION '-' MULTIPLICATIVE__EXPRESSION
 					;
 
-MULTIPLICATIVE__EXPRESSION: MULTIPLICATIVE__EXPRESSION '*' CAST__EXPRESSION
+MULTIPLICATIVE__EXPRESSION:CAST__EXPRESSION
+						|
+						MULTIPLICATIVE__EXPRESSION '*' CAST__EXPRESSION
 						|
 						MULTIPLICATIVE__EXPRESSION '/' CAST__EXPRESSION
 						|
@@ -520,9 +531,6 @@ IF__LINE: '#' "IF" CONSTANT__EXPRESSION
 		;
 
 ELIF__PARTS: ELIF__LINE TEXT
-			|
-			ELIF__PARTS
-			|
 			;
 
 ELIF__LINE : '#' "ELIF" CONSTANT__EXPRESSION;
@@ -534,14 +542,20 @@ ELSE__LINE: '#' "ELSE";
 TEXT: TRANSLATION__UNIT;
 
 %%
+
 int main()
 {
+	// extern int yy_flex_debug;
+	// yy_flex_debug= 1;	
+	yydebug = 1;
  return(yyparse());
 }
 
 yyerror(s)
 char *s;
 {
+	extern int yylineno;
+	printf("Error in: %d\n",yylineno );
   fprintf(stderr, "The string is not of the required form\n",s);
 }
 
