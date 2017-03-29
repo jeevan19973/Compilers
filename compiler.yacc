@@ -273,19 +273,21 @@ LABELED__STATEMENT:  IDENTIFIER ':' STATEMENT
 EXPRESSION__STATEMENT: EXPRESSION__OPT ';'
                       ;
 
-COMPOUND__STATEMENT: '{' DECLARATION__LIST STATEMENT__LIST '}'
-					|
-					'{' STATEMENT__LIST '}'
-					|
-					'{' DECLARATION__LIST '}'
+COMPOUND__STATEMENT: '{' BLOCK_ITEM_LIST '}'
 					|
 					'{' '}'
                     ;
 
-STATEMENT__LIST: STATEMENT
-                |
-                STATEMENT__LIST STATEMENT
-                ;
+BLOCK_ITEM_LIST: BLOCK_ITEM
+                  |
+                  BLOCK_ITEM_LIST BLOCK_ITEM
+                  ;
+
+BLOCK_ITEM:   DECLARATION
+              |
+              STATEMENT
+              ;                                      
+
 
 SELECTION__STATEMENT:  IF '(' EXPRESSION ')' STATEMENT
                       |
@@ -547,7 +549,7 @@ int main()
 {
 	// extern int yy_flex_debug;
 	// yy_flex_debug= 1;	
-	yydebug = 1;
+	//yydebug = 1;
  return(yyparse());
 }
 
