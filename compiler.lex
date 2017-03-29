@@ -54,6 +54,6 @@
 
 [^\n \t]+ return TOKEN_SEQUENCE;
 
-^([^ ]+)|([^/ ]+)$ return FILENAME;
+^\$(([^ ]+)|([^/ ]+))$ return FILENAME;
 
 %%
