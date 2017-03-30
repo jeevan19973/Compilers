@@ -3,6 +3,9 @@
 	// int yylineno=1;
 %}
 %%
+"/*"			{ comment(); }
+"//"[^\n]*              { /* consume //-comment */ }
+
 [\n]   { yylineno = yylineno + 1;}
 [ \t] {}
 
@@ -35,6 +38,34 @@
 "break" { return BREAK;}
 "return" { return RETURN;}
 
+"||"	{return OR_OP;}
+"&&"	{return AND_OP;}
+
+"..."	{ return ELLIPSIS; }
+">>"	{ return RIGHT_OP; }
+"<<"	{ return LEFT_OP; }
+
+"++"	{ return INC_OP; }
+"--"	{ return DEC_OP; }
+"->"	{ return PTR_OP; }
+
+"=="    {return EQ_OP;}
+"<="	{ return LE_OP; }
+">="	{ return GE_OP; }
+"!="	{ return NE_OP; } 
+
+%Assignment
+"*="      { return MUL_ASSIGN; }
+"/="      { return DIV_ASSIGN; }
+"%="      { return MOD_ASSIGN; }
+"+="      { return ADD_ASSIGN; }
+"-="      { return SUB_ASSIGN; }
+"<<="     { return LEFT_ASSIGN; }
+">>="     { return RIGHT_ASSIGN; }
+"&="      { return AND_ASSIGN; }
+"^="      { return XOR_ASSIGN; }
+"|="      { return OR_ASSIGN; }
+
 [,{}()[\]#=*+-/<>!|&%~^;] { return yytext[0];}
 
 "sizeof" { return SIZEOF;}
@@ -60,3 +91,16 @@
 
 
 %%
+
+void comment(void)
+{
+	char c, prev = 0;
+  
+	while ((c = input()) != 0)      /* (EOF maps to 0) */
+	{
+		if (c == '/' && prev == '*')
+			return;
+		prev = c;
+	}
+	error("unterminated comment");
+}
