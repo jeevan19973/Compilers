@@ -29,7 +29,7 @@
 
 %%
 
-PROGRAM: CONTROL TRANSLATION__UNIT;
+PROGRAM: CONTROL TRANSLATION__UNIT { printf("PASS\n"); };
 
 TRANSLATION__UNIT: EXTERNAL__DECLARATION
                   |
@@ -88,9 +88,9 @@ TYPE__SPECIFIER: TYPE_SPECIFIER
 TYPE__QUALIFIER: TYPE_QUALIFIER
                 ;
 
-STRUCT__OR__UNION__SPECIFIER: STRUCT__OR__UNION IDENTIFIER '{' STRUCT__DECLARATION__LIST '}'
+STRUCT__OR__UNION__SPECIFIER: STRUCT__OR__UNION IDENTIFIER '{' STRUCT__DECLARATION__LIST '}' ';'
                            |
-                           STRUCT__OR__UNION '{' STRUCT__DECLARATION__LIST '}'
+                           STRUCT__OR__UNION '{' STRUCT__DECLARATION__LIST '}' ';'
                            |
                            STRUCT__OR__UNION IDENTIFIER
                            ;
@@ -113,7 +113,7 @@ INIT__DECLARATOR: DECLARATOR
                  DECLARATOR '=' INITIALIZER
                  ;
 
-STRUCT__DECLARATION: SPECIFIER__QUALIFIER__LIST STRUCT__DECLARATOR__LIST
+STRUCT__DECLARATION: SPECIFIER__QUALIFIER__LIST STRUCT__DECLARATOR__LIST ';'
                     ;
 
 SPECIFIER__QUALIFIER__LIST: TYPE__SPECIFIER SPECIFIER__QUALIFIER__LIST
@@ -469,7 +469,7 @@ POSTFIX__EXPRESSION: PRIMARY__EXPRESSION
 					|
 					POSTFIX__EXPRESSION '.' IDENTIFIER
 					|
-					POSTFIX__EXPRESSION PTR_OP '+' IDENTIFIER
+					POSTFIX__EXPRESSION PTR_OP IDENTIFIER
 					|
 					POSTFIX__EXPRESSION INC_OP
 					|
@@ -552,9 +552,9 @@ TEXT: TRANSLATION__UNIT;
 
 int main()
 {
-	// extern int yy_flex_debug;
+//	 extern int yy_flex_debug;
 	// yy_flex_debug= 1;	
-	yydebug = 1;
+	//yydebug = 1;
  return(yyparse());
 }
 
@@ -562,8 +562,10 @@ yyerror(s)
 char *s;
 {
 	extern int yylineno;
-	printf("Error in: %d\n",yylineno );
-  fprintf(stderr, "The string is not of the required form\n",s);
+  extern char *yytext;
+   fprintf(stderr, "FAIL\n",s);
+	printf("Line Number: %d Parse Error %s\n",yylineno, yytext );
+ 
 }
 
 yywrap()

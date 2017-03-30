@@ -3,11 +3,14 @@
 	// int yylineno=1;
 %}
 %%
+[\n]   { yylineno = yylineno + 1;}
 "/*"			{ comment(); }
 "//"[^\n]*              { /* consume //-comment */ }
 
-[\n]   { yylineno = yylineno + 1;}
+
 [ \t] {}
+
+"fname" { return FILENAME;}
 
 "auto"|"register"|"static"|"extern"|"typedef" { return STORAGE_CLASS_SPECIFIER;}
 
@@ -66,7 +69,7 @@
 "^="      { return XOR_ASSIGN; }
 "|="      { return OR_ASSIGN; }
 
-[,{}()[\]#=*+-/<>!|&%~^;] { return yytext[0];}
+[,{}()[\]#=*+-/<>!|&%~^;:] { return yytext[0];}
 
 "sizeof" { return SIZEOF;}
 "define" { return DEFINE;}
@@ -79,7 +82,6 @@
 "ifndef" { return IFNDEF;}
 "elif" { return ELIF;} 
 
-"fname" { return FILENAME;}
 
 [_a-zA-Z][_a-zA-Z0-9]* { return IDENTIFIER;}
 [+-]?[0-9]+ { return INTEGER_CONSTANT;}
@@ -98,6 +100,7 @@ void comment(void)
   
 	while ((c = input()) != 0)      /* (EOF maps to 0) */
 	{
+		if( c == '\n') { yylineno += 1;}
 		if (c == '/' && prev == '*')
 			return;
 		prev = c;
